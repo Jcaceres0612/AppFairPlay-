@@ -1,0 +1,11 @@
+spring:
+  application:
+      name: FairPlay
+  profiles:
+    active: pruebas
+
+
+
+server:
+  servlet:
+    context-path: /AppfairPlay

@@ -16,5 +16,6 @@ public class Persona {
     String email;
     String direccion;
     String cedula;
+    int ano;
 
 }

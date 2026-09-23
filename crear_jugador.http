@@ -1,4 +1,11 @@
+/*PUT http://localhost:9494/AppfairPlay/api/jugadores/17
+Content-Type: application/json
 
+{
+  "nombre": "Sebastian Modificado",
+  "apellido": "Caceres Perea",
+  "idPosicion": 1
+}*/
 
 PUT http://localhost:9494/AppfairPlay/api/jugadores/17
 Content-Type: application/json

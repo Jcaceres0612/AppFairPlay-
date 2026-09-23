@@ -16,9 +16,7 @@ public class JugadorController {
         this.repositorio = repositorio;
     }
 
-    // --------------------------------------------------------
-    // ENDPOINT PARA CREAR UN JUGADOR (La 'C' de tu CRUL)
-    // --------------------------------------------------------
+/*este metodo nos sirve para crear los jugadores y llevarlos a la base de datos*/
     @PostMapping
     public ResponseEntity<String> crearJugador(@RequestBody Jugador jugador) {
         try {
@@ -29,10 +27,7 @@ public class JugadorController {
         }
     }
 
-    // --------------------------------------------------------
-    // ENDPOINT PARA LISTAR JUGADORES (La 'R/L' de tu CRUL)
-    // --------------------------------------------------------
-    @GetMapping
+/*este metodo nos sirve para saber que cuantos usuarios hay guardados en la base de datos creada*/
     public List<Jugador> obtenerTodosLosJugadores() {
         try {
             return repositorio.listarJugadores();
@@ -41,9 +36,7 @@ public class JugadorController {
         }
     }
 
-    // --------------------------------------------------------
-    // ENDPOINT PARA ACTUALIZAR UN JUGADOR (La 'U' de tu CRUL)
-    // --------------------------------------------------------
+  /*este metodo nos ayuda a actualizar la informacion que sea necesaria de un jugador almacenador*/
     @PutMapping("/{id}")
     public ResponseEntity<String> actualizarJugador(@PathVariable Integer id, @RequestBody Jugador jugador) {
         try {

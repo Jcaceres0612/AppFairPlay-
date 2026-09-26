@@ -8,4 +8,4 @@ spring:
 
 server:
   servlet:
-    context-path: /AppfairPlay
+    context-path: /AppFairPlay

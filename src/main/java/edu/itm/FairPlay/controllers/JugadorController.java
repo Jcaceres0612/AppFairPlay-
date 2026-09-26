@@ -26,15 +26,16 @@ public class JugadorController {
             return ResponseEntity.ok("Rayos, hubo un error al guardar: " + e.getMessage());
         }
     }
-
 /*este metodo nos sirve para saber que cuantos usuarios hay guardados en la base de datos creada*/
-    public List<Jugador> obtenerTodosLosJugadores() {
-        try {
-            return repositorio.listarJugadores();
-        } catch (Exception e) {
-            return null;
-        }
+/*este metodo nos sirve para saber que cuantos usuarios hay guardados en la base de datos creada*/
+@GetMapping
+public List<Jugador> obtenerTodosLosJugadores() {
+    try {
+        return repositorio.listarJugadores();
+    } catch (Exception e) {
+        return null;
     }
+}
 
   /*este metodo nos ayuda a actualizar la informacion que sea necesaria de un jugador almacenador*/
     @PutMapping("/{id}")

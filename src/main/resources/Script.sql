@@ -1,4 +1,4 @@
-﻿USE [FairPlay]
+USE [FairPlay];
 GO
 /****** Objeto: Table [dbo].[Jugador] Fecha de script: 23/09/2026 6:08:35 p. m. ******/
 SET ANSI_NULLS ON

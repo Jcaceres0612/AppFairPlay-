@@ -71,4 +71,15 @@ public class JugadorRepository {
             statement.executeUpdate();
         }
     }
+    // DELETE (Eliminar)
+    public void eliminarJugador(Integer id) throws SQLException {
+        String sql = "DELETE FROM Jugador WHERE idjugador = ?";
+
+        try (Connection conexion = dataSource.getConnection();
+             PreparedStatement statement = conexion.prepareStatement(sql)) {
+
+            statement.setInt(1, id);
+            statement.executeUpdate();
+        }
+    }
 }

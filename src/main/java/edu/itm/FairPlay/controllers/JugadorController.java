@@ -52,4 +52,16 @@ public List<Jugador> obtenerTodosLosJugadores() {
             return ResponseEntity.status(500).body("Rayos, hubo un error al actualizar: " + e.getMessage());
         }
     }
+    /*este metodo nos ayuda a eliminar un jugador de la base de datos usando su ID*/
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> eliminarJugador(@PathVariable Integer id) {
+        try {
+            // Llamamos al repositorio para que elimine al jugador por su ID
+            repositorio.eliminarJugador(id);
+
+            return ResponseEntity.ok("¡El jugador con ID " + id + " fue eliminado exitosamente de FairPlay!");
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Rayos, hubo un error al eliminar: " + e.getMessage());
+        }
+    }
 }

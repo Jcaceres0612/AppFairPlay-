@@ -5,8 +5,8 @@ import edu.itm.FairPlay.repositories.PosicionRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-
 @Service
+
 public class PosicionService { // Ojo,
 
     private final PosicionRepository posicionRepository;

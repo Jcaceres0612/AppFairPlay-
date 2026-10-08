@@ -6,7 +6,7 @@ import edu.itm.FairPlay.models.EquipoJugador;
 import edu.itm.FairPlay.services.EquipoJugadorService;
 import java.util.List;
 
-@RestController
+//@RestController
 @RequestMapping("/api/equipo-jugadores")
 public class EquipoJugadorController {
 

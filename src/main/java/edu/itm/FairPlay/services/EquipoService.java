@@ -4,8 +4,8 @@ import edu.itm.FairPlay.models.Equipo;
 import edu.itm.FairPlay.repositories.EquipoRepository;
 import org.springframework.stereotype.Service;
 import java.util.List;
-
 @Service
+
 public class EquipoService {
 
     private final EquipoRepository repositorio;

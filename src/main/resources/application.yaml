@@ -1,8 +1,7 @@
 spring:
-  application:
-      name: FairPlay
-  profiles:
-    active: pruebas
+  config:
+    activate:
+      on-profile: pruebas
 
 
 

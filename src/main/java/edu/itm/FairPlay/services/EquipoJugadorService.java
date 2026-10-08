@@ -5,7 +5,6 @@ import edu.itm.FairPlay.repositories.EquipoJugadorRepository;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
-@Service
 public class EquipoJugadorService {
 
     private final EquipoJugadorRepository repositorio;

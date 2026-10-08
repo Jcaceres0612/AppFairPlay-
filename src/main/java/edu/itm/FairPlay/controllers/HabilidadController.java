@@ -6,7 +6,7 @@ import edu.itm.FairPlay.models.Habilidad;
 import edu.itm.FairPlay.services.HabilidadService;
 import java.util.List;
 
-@RestController
+//@RestController
 @RequestMapping("/api/habilidades")
 public class HabilidadController {
 

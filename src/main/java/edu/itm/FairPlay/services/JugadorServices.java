@@ -5,8 +5,8 @@ import edu.itm.FairPlay.repositories.JugadorRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-
 @Service
+
 public class JugadorServices {
 
     private final JugadorRepository repositorio;

@@ -1,74 +1,16 @@
 package edu.itm.FairPlay.repositories;
 
-import org.springframework.stereotype.Repository;
-import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
 import edu.itm.FairPlay.models.Jugador;
+import java.util.List;
 
-@Repository
-public class JugadorRepository {
+public interface JugadorRepository {
 
-    private final DataSource dataSource;
+    void registrarJugador(Jugador jugador) throws Exception;
 
-    public JugadorRepository(DataSource dataSource) {
-        this.dataSource = dataSource;
-    }
+    List<Jugador> listarJugadores() throws Exception;
 
-    // CREATE (POST)
-    public void registrarJugador(Jugador jugador) throws SQLException {
-        String sql = "INSERT INTO Jugador (nombre, apellido, fechaRegistro, idPosicion) VALUES (?, ?, ?, ?)";
+    void actualizarJugador(Jugador jugador) throws Exception;
 
-        try (Connection conexion = dataSource.getConnection();
-             PreparedStatement statement = conexion.prepareStatement(sql)) {
+    void eliminarJugador(Integer id) throws Exception;
 
-            statement.setString(1, jugador.getNombre());
-            statement.setString(2, jugador.getApellido());
-            statement.setDate(3, jugador.getFechaRegistro());
-            statement.setInt(4, jugador.getIdPosicion());
-            statement.executeUpdate();
-        }
-    }
-
-    // LIST (GET)
-    public List<Jugador> listarJugadores() throws SQLException {
-        List<Jugador> lista = new ArrayList<>();
-        String sql = "SELECT * FROM Jugador";
-
-        try (Connection conexion = dataSource.getConnection();
-             Statement statement = conexion.createStatement();
-             ResultSet rs = statement.executeQuery(sql)) {
-
-            while (rs.next()) {
-                Jugador j = new Jugador();
-                j.setIdJugador(rs.getInt("idjugador"));
-                j.setNombre(rs.getString("nombre"));
-                j.setApellido(rs.getString("apellido"));
-                j.setFechaRegistro(rs.getDate("fechaRegistro"));
-                j.setIdPosicion(rs.getInt("idPosicion"));
-                lista.add(j);
-            }
-        }
-        return lista;
-    }
-
-    // UPDATE (PUT) - La 'U' de tu CRUL con DataSource
-    public void actualizarJugador(Jugador jugador) throws SQLException {
-        String sql = "UPDATE jugador SET nombre = ?, apellido = ?, idPosicion = ? WHERE idJugador = ?";
-
-        try (Connection conexion = dataSource.getConnection();
-             PreparedStatement statement = conexion.prepareStatement(sql)) {
-
-            statement.setString(1, jugador.getNombre());
-            statement.setString(2, jugador.getApellido());
-            statement.setInt(3, jugador.getIdPosicion());
-            statement.setInt(4, jugador.getIdJugador());
-            statement.executeUpdate();
-        }
-    }
 }

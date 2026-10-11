@@ -11,15 +11,12 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/equipos")
-@Tag(name = "Equipos", description = "Manejo de los equipos inscritos en el torneo")
-public class EquipoController {
-
+public class EquipoController implements IEquipoController {
     @Autowired
     private EquipoService equipoService; // Cambiado aquí también
 
     @GetMapping
-    @Operation(summary = "Ver todos los equipos", description = "Trae la lista completa de los equipos registrados.")
-    public ResponseEntity<?> listarEquipos() {
+     public ResponseEntity<?> listarEquipos() {
         try {
             return ResponseEntity.ok(equipoService.listarEquipos());
         } catch (Exception e) {
@@ -28,8 +25,7 @@ public class EquipoController {
     }
 
     @PostMapping
-    @Operation(summary = "Registrar un equipo nuevo", description = "Pilas: No le mandes idEquipo para que se cree solo. Pero SÍ tienes que mandarle un idPartido que ya exista previamente en la base de datos.")
-    public ResponseEntity<?> registrarEquipo(@RequestBody Equipo equipo) {
+     public ResponseEntity<?> registrarEquipo(@RequestBody Equipo equipo) {
         try {
             equipoService.registrarEquipo(equipo);
         } catch (Exception e) {
@@ -40,8 +36,7 @@ public class EquipoController {
     }
 
     @PutMapping("/{id}")
-    @Operation(summary = "Actualizar datos del equipo", description = "Modifica un equipo existente mandándole su ID exacto en la URL.")
-    public ResponseEntity<?> actualizarEquipo(@PathVariable Integer id, @RequestBody Equipo equipo) {
+     public ResponseEntity<?> actualizarEquipo(@PathVariable Integer id, @RequestBody Equipo equipo) {
         equipo.setIdEquipo(id);
         try {
             equipoService.actualizarEquipo(equipo);
@@ -52,8 +47,7 @@ public class EquipoController {
     }
 
     @DeleteMapping("/{id}")
-    @Operation(summary = "Borrar un equipo", description = "Elimina el equipo de la base de datos. (Recuerda revisar que no tenga jugadores amarrados antes de borrarlo).")
-    public ResponseEntity<?> eliminarEquipo(@PathVariable Integer id) {
+     public ResponseEntity<?> eliminarEquipo(@PathVariable Integer id) {
         try {
             equipoService.eliminarEquipo(id);
         } catch (Exception e) {

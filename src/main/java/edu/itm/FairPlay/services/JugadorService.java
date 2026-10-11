@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class JugadorServiceImpl implements IJugadorService {
+public class JugadorService implements IJugadorService {
 
     @Autowired
     private JugadorRepository jugadorRepository;

@@ -1,58 +1,61 @@
 package edu.itm.FairPlay.controllers;
 
+import edu.itm.FairPlay.models.Habilidad;
+import edu.itm.FairPlay.services.IHabilidadService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import edu.itm.FairPlay.models.Habilidad;
-import edu.itm.FairPlay.services.HabilidadService;
-import java.util.List;
 
-//@RestController
+@RestController
 @RequestMapping("/api/habilidades")
-public class HabilidadController {
+public class HabilidadController implements IHabilidadController {
 
-    private final HabilidadService servicio;
+    @Autowired
+    private IHabilidadService habilidadService;
 
-    public HabilidadController(HabilidadService servicio) {
-        this.servicio = servicio;
-    }
-
-    @PostMapping
-    public ResponseEntity<String> crearHabilidad(@RequestBody Habilidad habilidad) {
-        try {
-            servicio.registrarHabilidad(habilidad);
-            return ResponseEntity.ok("¡Listo! La habilidad fue guardada correctamente en FairPlay.");
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body("Rayos, hubo un error al guardar: " + e.getMessage());
-        }
-    }
-
+    @Override
     @GetMapping
-    public List<Habilidad> obtenerTodasLasHabilidades() {
+    public ResponseEntity<?> obtenerTodasLasHabilidades() {
         try {
-            return servicio.listarHabilidades();
+            return ResponseEntity.ok(habilidadService.listarHabilidades());
         } catch (Exception e) {
-            return null;
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al obtener las habilidades: " + e.getMessage());
         }
     }
 
+    @Override
+    @PostMapping
+    public ResponseEntity<?> guardar(@RequestBody Habilidad habilidad) {
+        try {
+            habilidadService.registrarHabilidad(habilidad);
+            return ResponseEntity.status(HttpStatus.CREATED).body("¡Habilidad guardada con éxito!");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+    @Override
     @PutMapping("/{id}")
-    public ResponseEntity<String> actualizarHabilidad(@PathVariable Integer id, @RequestBody Habilidad habilidad) {
+    public ResponseEntity<?> actualizar(@PathVariable Integer id, @RequestBody Habilidad habilidad) {
         try {
             habilidad.setIdHabilidad(id);
-            servicio.actualizarHabilidad(habilidad);
-            return ResponseEntity.ok("¡La habilidad con ID " + id + " fue actualizada exitosamente!");
+            habilidadService.actualizarHabilidad(habilidad);
+            return ResponseEntity.ok("Habilidad actualizada exitosamente.");
         } catch (Exception e) {
-            return ResponseEntity.status(500).body("Rayos, hubo un error al actualizar: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 
+    @Override
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> eliminarHabilidad(@PathVariable Integer id) {
+    public ResponseEntity<?> eliminar(@PathVariable Integer id) {
         try {
-            servicio.eliminarHabilidad(id);
-            return ResponseEntity.ok("¡La habilidad con ID " + id + " fue eliminada exitosamente!");
+            habilidadService.eliminarHabilidad(id);
+            return ResponseEntity.ok("Habilidad eliminada correctamente.");
         } catch (Exception e) {
-            return ResponseEntity.status(500).body("Rayos, hubo un error al eliminar: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error al eliminar la habilidad: " + e.getMessage());
         }
     }
 }

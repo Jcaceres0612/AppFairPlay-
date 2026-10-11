@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 @Service
 
-public class EquipoService {
+public class EquipoService implements IEquipoService {
 
     private final EquipoRepository repositorio;
 
@@ -29,4 +29,5 @@ public class EquipoService {
     public void eliminarEquipo(Integer id) throws Exception {
         repositorio.eliminarEquipo(id);
     }
+
 }

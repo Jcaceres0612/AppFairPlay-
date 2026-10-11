@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 @Service
 
-public class PosicionService { // Ojo,
+public class PosicionService implements IPosicionService{
 
     private final PosicionRepository posicionRepository;
 

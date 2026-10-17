@@ -1,47 +1,58 @@
 package edu.itm.FairPlay.controllers;
 
+import edu.itm.FairPlay.models.JugadorHabilidad;
+import edu.itm.FairPlay.services.IJugadorHabilidadService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import edu.itm.FairPlay.models.JugadorHabilidad;
-import edu.itm.FairPlay.services.JugadorHabilidadService;
-import java.util.List;
 
-//@RestController
+@RestController
 @RequestMapping("/api/jugador-habilidades")
-public class JugadorHabilidadController {
+public class JugadorHabilidadController implements IJugadorHabilidadController {
 
-    private final JugadorHabilidadService servicio;
+    @Autowired
+    private IJugadorHabilidadService servicio;
 
-    public JugadorHabilidadController(JugadorHabilidadService servicio) {
-        this.servicio = servicio;
+    @Override
+    @GetMapping
+    public ResponseEntity<?> listarHabilidadesDeJugadores() {
+        try {
+            return ResponseEntity.ok(servicio.listarHabilidadesDeJugadores());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al obtener las habilidades de los jugadores: " + e.getMessage());
+        }
     }
 
+    @Override
     @PostMapping
-    public ResponseEntity<String> asociarHabilidadAJugador(@RequestBody JugadorHabilidad jugadorHabilidad) {
+    public ResponseEntity<?> asignarHabilidadAJugador(@RequestBody JugadorHabilidad jugadorHabilidad) {
         try {
-            servicio.registrarJugadorHabilidad(jugadorHabilidad);
-            return ResponseEntity.ok("¡Listo! La valoración de la habilidad fue asignada al jugador.");
+            servicio.asignarHabilidadAJugador(jugadorHabilidad);
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body("¡Listo! La valoración de la habilidad fue asignada al jugador.");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Error de validación: " + e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.status(500).body("Rayos, hubo un error al asociar: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Rayos, hubo un error al asociar: " + e.getMessage());
         }
     }
 
-    @GetMapping("/jugador/{idJugador}")
-    public List<JugadorHabilidad> obtenerHabilidadesPorJugador(@PathVariable Integer idJugador) {
+    @Override
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> eliminarHabilidadDeJugador(@PathVariable Integer id) {
         try {
-            return servicio.listarPorJugador(idJugador);
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    @DeleteMapping("/jugador/{idJugador}/habilidad/{idHabilidad}")
-    public ResponseEntity<String> eliminarHabilidadDeJugador(@PathVariable Integer idJugador, @PathVariable Integer idHabilidad) {
-        try {
-            servicio.eliminarJugadorHabilidad(idJugador, idHabilidad);
+            servicio.eliminarHabilidadDeJugador(id);
             return ResponseEntity.ok("¡La habilidad del jugador fue removida con éxito!");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Error al eliminar la habilidad: " + e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.status(500).body("Rayos, hubo un error al eliminar: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Rayos, hubo un error al eliminar: " + e.getMessage());
         }
     }
 }

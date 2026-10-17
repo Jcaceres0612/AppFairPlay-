@@ -2,23 +2,47 @@ package edu.itm.FairPlay.controllers;
 
 import edu.itm.FairPlay.models.Posicion;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
-@Tag(name = "Posiciones", description = "Configuración de las posiciones en la cancha (Arquero, Defensa, etc.)")
+@Tag(name = "Posiciones", description = "Manejo de las posiciones de los jugadores en el campo")
 public interface IPosicionController {
 
-    @Operation(summary = "Ver todas las posiciones", description = "Trae la lista de las posiciones que pueden jugar en la cancha.")
-    ResponseEntity<?> listarTodos() throws Exception;
+    @Operation(summary = "Ver todas las posiciones", description = "Trae la lista de todas las posiciones disponibles")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Lista obtenida correctamente"),
+            @ApiResponse(responseCode = "500", description = "Error interno del servidor")
+    })
+    @GetMapping
+    ResponseEntity<?> listarTodos();
 
-    @Operation(summary = "Crear una posición nueva", description = "Ojo: Aquí SÍ tienes que mandar el idPosicion en el JSON.")
-    ResponseEntity<?> registrarPosicion(@RequestBody Posicion posicion) throws Exception;
+    @Operation(summary = "Registrar posición", description = "Guarda una nueva posición")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Posición guardada exitosamente"),
+            @ApiResponse(responseCode = "400", description = "Error de validación"),
+            @ApiResponse(responseCode = "500", description = "Error interno del servidor")
+    })
+    @PostMapping
+    ResponseEntity<?> registrarPosicion(@RequestBody Posicion posicion);
 
-    @Operation(summary = "Actualizar una posición", description = "Le cambias el nombre o la descripción a una posición que ya existe.")
-    ResponseEntity<?> actualizarPosicion(@PathVariable Integer id, @RequestBody Posicion posicion) throws Exception;
+    @Operation(summary = "Actualizar posición", description = "Modifica una posición existente")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Posición actualizada exitosamente"),
+            @ApiResponse(responseCode = "400", description = "Error de validación"),
+            @ApiResponse(responseCode = "500", description = "Error interno del servidor")
+    })
+    @PutMapping("/{id}")
+    ResponseEntity<?> actualizarPosicion(@PathVariable Integer id, @RequestBody Posicion posicion);
 
-    @Operation(summary = "Borrar una posición", description = "Pilas: Si hay jugadores usando esta posición, SQL Server no te va a dejar borrarla.")
-    ResponseEntity<?> eliminarPosicion(@PathVariable Integer id) throws Exception;
+    @Operation(summary = "Borrar posición", description = "Elimina una posición usando su ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Posición eliminada exitosamente"),
+            @ApiResponse(responseCode = "400", description = "Error al eliminar"),
+            @ApiResponse(responseCode = "500", description = "Error interno del servidor")
+    })
+    @DeleteMapping("/{id}")
+    ResponseEntity<?> eliminarPosicion(@PathVariable Integer id);
 }

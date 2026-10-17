@@ -31,8 +31,11 @@ public class HabilidadController implements IHabilidadController {
         try {
             habilidadService.registrarHabilidad(habilidad);
             return ResponseEntity.status(HttpStatus.CREATED).body("¡Habilidad guardada con éxito!");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error de validación: " + e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error interno al guardar la habilidad: " + e.getMessage());
         }
     }
 
@@ -43,8 +46,11 @@ public class HabilidadController implements IHabilidadController {
             habilidad.setIdHabilidad(id);
             habilidadService.actualizarHabilidad(habilidad);
             return ResponseEntity.ok("Habilidad actualizada exitosamente.");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error de validación: " + e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error interno al actualizar la habilidad: " + e.getMessage());
         }
     }
 
@@ -54,8 +60,11 @@ public class HabilidadController implements IHabilidadController {
         try {
             habilidadService.eliminarHabilidad(id);
             return ResponseEntity.ok("Habilidad eliminada correctamente.");
-        } catch (Exception e) {
+        } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error al eliminar la habilidad: " + e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error interno al eliminar la habilidad: " + e.getMessage());
         }
     }
 }

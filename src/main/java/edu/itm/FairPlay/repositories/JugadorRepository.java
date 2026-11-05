@@ -13,4 +13,6 @@ public interface JugadorRepository {
 
     void eliminarJugador(Integer id) throws Exception;
 
+    Jugador buscarPorId(Integer id) throws Exception;
+
 }

@@ -6,7 +6,7 @@ import edu.itm.FairPlay.models.EquipoJugador;
 import edu.itm.FairPlay.services.EquipoJugadorService;
 import java.util.List;
 
-//@RestController
+@RestController
 @RequestMapping("/api/equipo-jugadores")
 public class EquipoJugadorController {
 
@@ -19,7 +19,7 @@ public class EquipoJugadorController {
     @PostMapping
     public ResponseEntity<String> agregarJugadorAEquipo(@RequestBody EquipoJugador equipoJugador) {
         try {
-            servicio.registrarEquipoJugador(equipoJugador);
+            servicio.asociarJugadorAEquipo(equipoJugador);
             return ResponseEntity.ok("¡Listo! El jugador fue añadido al equipo correctamente.");
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Rayos, hubo un error al agregar el jugador al equipo: " + e.getMessage());
@@ -29,7 +29,7 @@ public class EquipoJugadorController {
     @GetMapping("/equipo/{idEquipo}")
     public List<EquipoJugador> obtenerJugadoresPorEquipo(@PathVariable Integer idEquipo) {
         try {
-            return servicio.listarPorEquipo(idEquipo);
+            return servicio.listarEquiposJugadores(); // (Asegúrate de quitar el idEquipo de los paréntesis si el método GET general no lo necesita)
         } catch (Exception e) {
             return null;
         }
@@ -38,7 +38,7 @@ public class EquipoJugadorController {
     @DeleteMapping("/equipo/{idEquipo}/jugador/{idJugador}")
     public ResponseEntity<String> eliminarJugadorDeEquipo(@PathVariable Integer idEquipo, @PathVariable Integer idJugador) {
         try {
-            servicio.eliminarEquipoJugador(idEquipo, idJugador);
+            servicio.desasociarJugadorDeEquipo(idEquipo);
             return ResponseEntity.ok("¡El jugador fue retirado del equipo exitosamente!");
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Rayos, hubo un error al eliminar: " + e.getMessage());

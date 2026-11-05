@@ -1,59 +1,60 @@
 package edu.itm.FairPlay.services;
 
 import edu.itm.FairPlay.models.Jugador;
-import edu.itm.FairPlay.repositories.JugadorRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import edu.itm.FairPlay.repositories.JugadorJpaRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class JugadorService implements IJugadorService {
+public class JugadorService {
 
-    @Autowired
-    private JugadorRepository jugadorRepository;
+    private final JugadorJpaRepository jugadorRepository;
 
-    @Override
-    public Jugador guardar(Jugador jugador) {
+    // Inyección del nuevo repositorio JPA
+    public JugadorService(JugadorJpaRepository jugadorRepository) {
+        this.jugadorRepository = jugadorRepository;
+    }
 
-        try {
+    public Jugador registrarJugador(Jugador jugador) {
+        // save() detecta que el ID es nuevo y ejecuta un INSERT automático
+        return jugadorRepository.save(jugador);
+    }
 
-            if (jugador.getIdJugador() != null && jugador.getIdJugador() > 0) {
-                jugadorRepository.actualizarJugador(jugador);
-            } else {
+    public List<Jugador> listarJugadores() {
+        // findAll() ejecuta el SELECT y mapea la lista automáticamente
+        return jugadorRepository.findAll();
+    }
 
-                jugadorRepository.registrarJugador(jugador);
-            }
-            return jugador;
-        } catch (Exception e) {
-            throw new RuntimeException("Error en la base de datos: " + e.getMessage());
+    public Jugador buscarPorId(Integer id) throws Exception {
+        // findById() devuelve un "Optional" (una caja fuerte que puede tener o no al jugador)
+        Optional<Jugador> jugadorEncontrado = jugadorRepository.findById(id);
+
+        if (jugadorEncontrado.isPresent()) {
+            return jugadorEncontrado.get(); // Sacamos al jugador de la caja
+        } else {
+            throw new Exception("Jugador con ID " + id + " no encontrado.");
         }
     }
 
-    @Override
-    public List<Jugador> listarTodos() {
-        try {
+    public Jugador actualizarJugador(Integer id, Jugador jugadorActualizado) throws Exception {
+        // 1. Primero verificamos que el jugador exista
+        Jugador jugadorExistente = buscarPorId(id);
 
-            return jugadorRepository.listarJugadores();
-        } catch (Exception e) {
-            throw new RuntimeException("Error al listar: " + e.getMessage());
-        }
+        // 2. Modificamos los datos en la memoria
+        jugadorExistente.setNombre(jugadorActualizado.getNombre());
+        jugadorExistente.setApellido(jugadorActualizado.getApellido());
+        jugadorExistente.setIdPosicion(jugadorActualizado.getIdPosicion());
+        jugadorExistente.setFechaRegistro(jugadorActualizado.getFechaRegistro());
+
+        // 3. save() detecta que el objeto ya tiene un ID existente y ejecuta un UPDATE
+        return jugadorRepository.save(jugadorExistente);
     }
 
-    @Override
-    public Optional<Jugador> buscarPorId(Integer id) {
-
-        return Optional.empty();
-    }
-
-    @Override
-    public void eliminar(Integer id) {
-        try {
-
-            jugadorRepository.eliminarJugador(id);
-        } catch (Exception e) {
-            throw new RuntimeException("Error al eliminar: " + e.getMessage());
-        }
+    public void eliminarJugador(Integer id) throws Exception {
+        // Reutilizamos el método buscar para validar que exista antes de intentar borrar
+        Jugador jugadorExistente = buscarPorId(id);
+        jugadorRepository.delete(jugadorExistente);
     }
 }

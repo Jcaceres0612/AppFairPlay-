@@ -1,0 +1,8 @@
+HTTP
+POST http://localhost:9494/api/equipos-jugadores
+Content-Type: application/json
+
+{
+  "idEquipo": 1,
+  "idJugador": 5
+}

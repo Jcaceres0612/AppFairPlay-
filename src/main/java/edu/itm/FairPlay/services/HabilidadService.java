@@ -1,49 +1,57 @@
+
+
 package edu.itm.FairPlay.services;
 
 import edu.itm.FairPlay.models.Habilidad;
-import edu.itm.FairPlay.repositories.HabilidadRepository;
+import edu.itm.FairPlay.repositories.HabilidadJpaRepository;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
+import java.util.Optional;
 
 @Service
-public class HabilidadService implements IHabilidadService { // <-- Lo conectamos a la interfaz
+public class HabilidadService {
 
-    private final HabilidadRepository repositorio;
+    private final HabilidadJpaRepository habilidadRepository;
 
-    public HabilidadService(HabilidadRepository repositorio) {
-        this.repositorio = repositorio;
+    // Inyección de dependencias del repositorio JPA
+    public HabilidadService(HabilidadJpaRepository habilidadRepository) {
+        this.habilidadRepository = habilidadRepository;
     }
 
-    @Override
-    public void registrarHabilidad(Habilidad habilidad) throws Exception {
+    public Habilidad registrarHabilidad(Habilidad habilidad) {
+        return habilidadRepository.save(habilidad);
+    }
 
-        if (habilidad.getNombreHabilidad() == null || habilidad.getNombreHabilidad().trim().isEmpty()) {
-            throw new Exception("El nombre de la habilidad es obligatorio.");
+    public List<Habilidad> listarHabilidades() {
+        return habilidadRepository.findAll();
+    }
+
+
+    public Habilidad buscarPorId(Integer id) throws Exception {
+        Optional<Habilidad> habilidadEncontrada = habilidadRepository.findById(id);
+
+        if (habilidadEncontrada.isPresent()) {
+            return habilidadEncontrada.get();
+        } else {
+            throw new Exception("Habilidad con ID " + id + " no encontrada.");
         }
-        if (habilidad.getNombreHabilidad().length() < 3) {
-            throw new Exception(" El nombre debe tener al menos 3 caracteres.");
-        }
-
-
-        repositorio.registrarHabilidad(habilidad);
     }
 
-    @Override
-    public List<Habilidad> listarHabilidades() throws Exception {
-        return repositorio.listarHabilidades();
+
+    public Habilidad actualizarHabilidad(Integer id, Habilidad habilidadActualizada) throws Exception {
+
+        Habilidad habilidadExistente = buscarPorId(id);
+
+        // Modificamos en memoria (Nota: asegúrate de usar el nombre exacto de tu variable)
+        habilidadExistente.setNombreHabilidad(habilidadActualizada.getNombreHabilidad());
+
+        // Guardamos el cambio
+        return habilidadRepository.save(habilidadExistente);
     }
 
-    @Override
-    public void actualizarHabilidad(Habilidad habilidad) throws Exception {
-         if (habilidad.getNombreHabilidad() == null || habilidad.getNombreHabilidad().trim().isEmpty()) {
-            throw new Exception("El nombre de la habilidad no puede quedar vacío.");
-        }
-
-        repositorio.actualizarHabilidad(habilidad);
-    }
-
-    @Override
     public void eliminarHabilidad(Integer id) throws Exception {
-        repositorio.eliminarHabilidad(id);
+        Habilidad habilidadExistente = buscarPorId(id);
+        habilidadRepository.delete(habilidadExistente);
     }
 }

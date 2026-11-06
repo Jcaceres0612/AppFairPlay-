@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class HabilidadService {
+public class HabilidadService implements IHabilidadService {
 
     private final HabilidadJpaRepository habilidadRepository;
 

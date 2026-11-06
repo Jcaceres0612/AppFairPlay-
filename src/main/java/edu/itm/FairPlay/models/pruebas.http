@@ -1,8 +1,127 @@
 HTTP
-POST http://localhost:9494/api/equipos-jugadores
+### Listar todas las habilidades (GET)
+GET http://localhost:9494/AppFairPlay/api/habilidades
+Accept: application/json
+
+###
+
+### Crear una nueva habilidad (POST)
+POST http://localhost:9494/AppFairPlay/api/habilidades
 Content-Type: application/json
 
 {
-  "idEquipo": 1,
-  "idJugador": 5
+  "nombreHabilidad": "Velocidad"
 }
+
+### Buscar una habilidad específica por su ID (GET)
+GET http://localhost:9494/AppFairPlay/api/habilidades/1
+Accept: application/json
+
+###
+
+### Actualizar una habilidad existente (PUT)
+# Vamos a cambiarle el nombre a la habilidad con ID 1
+PUT http://localhost:9494/AppFairPlay/api/habilidades/1
+Content-Type: application/json
+
+{
+  "nombreHabilidad": "Tiro libre potente"
+}
+
+###
+
+### Eliminar una habilidad (DELETE)
+# Vamos a borrar la habilidad con ID 2 (Velocidad)
+DELETE http://localhost:9494/AppFairPlay/api/habilidades/2
+
+
+### 1. Listar todos los jugadores (GET)
+GET http://localhost:9494/AppFairPlay/api/jugadores
+Accept: application/json
+
+###
+
+### 2. Buscar jugador por ID (GET)
+GET http://localhost:9494/AppFairPlay/jugadores/1
+Accept: application/json
+
+###
+
+### 3. Registrar un nuevo jugador (POST)
+POST http://localhost:9494/AppFairPlay/jugadores
+Content-Type: application/json
+
+{
+  "nombre": "Carlos",
+  "apellido": "Valderrama",
+  "fechaRegistro": "2026-11-06",
+  "idPosicion": 10
+}
+
+###
+
+### 4. Actualizar un jugador existente (PUT)
+PUT http://localhost:9494/AppFairPlay/jugadores/1
+Content-Type: application/json
+
+{
+  "nombre": "Carlos Alberto",
+  "apellido": "Valderrama",
+  "fechaRegistro": "2026-11-06",
+  "idPosicion": 10
+}
+
+###
+
+### 5. Eliminar un jugador (DELETE)
+DELETE http://localhost:9494/AppFairPlay/jugadores/1
+
+HTTP
+### Listar todos los jugadores
+GET http://localhost:9494/AppFairPlay/jugadores
+Accept: application/json
+
+
+### 1. Listar todos los jugadores (GET)
+GET http://localhost:9494/AppFairPlay/jugadores
+Accept: application/json
+
+###
+
+### 2. Buscar jugador por ID (GET)
+# Nota: Cambia el '1' por un ID que sepas que existe en tu tabla Jugador
+GET http://localhost:9494/AppFairPlay/jugadores/1
+Accept: application/json
+
+###
+
+### 3. Registrar un nuevo jugador (POST)
+POST http://localhost:9494/AppFairPlay/jugadores
+Content-Type: application/json
+
+{
+  "nombre": "James",
+  "apellido": "Rodriguez",
+  "fechaRegistro": "2026-11-06",
+  "idPosicion": 4
+}
+
+###
+
+### 4. Actualizar un jugador existente (PUT)
+# Nota: Cambia el '1' de la URL por el ID del jugador que quieras modificar
+PUT http://localhost:9494/AppFairPlay/jugadores/30
+Content-Type: application/json
+
+{
+  "nombre": "James David",
+  "apellido": "Rodriguez Rubio",
+  "fechaRegistro": "2026-11-06",
+  "idPosicion": 5
+}
+
+###
+
+### 5. Eliminar un jugador (DELETE)
+# Nota: Cambia el '1' de la URL por el ID del jugador que desees borrar
+DELETE http://localhost:9494/AppFairPlay/jugadores/30

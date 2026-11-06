@@ -1,49 +1,67 @@
 package edu.itm.FairPlay.controllers;
 
 import edu.itm.FairPlay.models.Jugador;
-import edu.itm.FairPlay.services.IJugadorService;
-// ¡Asegúrate de agregar estos dos imports nuevos!
+import edu.itm.FairPlay.services.JugadorService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
-@RequestMapping("/api/jugadores")
+@RequestMapping("/jugadores")
+@Tag(name = "Jugadores", description = "CRUD de jugadores de FairPlay")
+public class JugadorController {
 
-  public class JugadorController implements IJugadorController {
+    private final JugadorService jugadorService;
 
-    @Autowired
-    private IJugadorService jugadorService;
+    public JugadorController(JugadorService jugadorService) {
+        this.jugadorService = jugadorService;
+    }
 
+    @Operation(summary = "Listar todos los jugadores")
+    @ApiResponse(responseCode = "200", description = "Lista de jugadores")
     @GetMapping
-     public ResponseEntity<?> listarTodos() {
-        // Tu código de listarTodos queda igualito...
-        return ResponseEntity.ok(jugadorService.listarTodos());
+    public ResponseEntity<List<Jugador>> listarTodos() {
+        return new ResponseEntity<>(jugadorService.listarJugadores(), HttpStatus.OK);
     }
 
+    @Operation(summary = "Buscar un jugador por ID")
+    @ApiResponse(responseCode = "200", description = "Jugador encontrado")
+    @ApiResponse(responseCode = "404", description = "Jugador no encontrado")
+    @GetMapping("/{id}")
+    public ResponseEntity<Jugador> buscarPorId(@PathVariable Integer id) {
+        return new ResponseEntity<>(jugadorService.buscarPorId(id), HttpStatus.OK);
+    }
+
+    @Operation(summary = "Registrar un jugador nuevo")
+    @ApiResponse(responseCode = "201", description = "Jugador creado")
+    @ApiResponse(responseCode = "400", description = "Datos inválidos")
     @PostMapping
-     public ResponseEntity<?> guardar(@RequestBody Jugador jugador) {
-        // Tu código de guardar queda igualito...
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body("¡Listo! El jugador fue guardado correctamente en la base de datos de FairPlay.");
+    public ResponseEntity<Jugador> registrarJugador(@Valid @RequestBody Jugador nuevoJugador) {
+        return new ResponseEntity<>(jugadorService.registrarJugador(nuevoJugador), HttpStatus.CREATED);
     }
 
+    @Operation(summary = "Actualizar un jugador existente")
+    @ApiResponse(responseCode = "200", description = "Jugador actualizado")
+    @ApiResponse(responseCode = "400", description = "Datos inválidos")
+    @ApiResponse(responseCode = "404", description = "Jugador no encontrado")
     @PutMapping("/{id}")
-     public ResponseEntity<?> actualizar(@PathVariable Integer id, @RequestBody Jugador jugador) {
-        // Tu código de actualizar queda igualito...
-        jugador.setIdJugador(id);
-        jugadorService.guardar(jugador);
-        return ResponseEntity.ok("¡El jugador con ID " + id + " fue actualizado exitosamente en FairPlay!");
+    public ResponseEntity<Jugador> actualizarJugador(@PathVariable Integer id,
+                                                     @Valid @RequestBody Jugador jugadorActualizado) {
+        return new ResponseEntity<>(jugadorService.actualizarJugador(id, jugadorActualizado), HttpStatus.OK);
     }
 
+    @Operation(summary = "Eliminar un jugador")
+    @ApiResponse(responseCode = "200", description = "Jugador eliminado")
+    @ApiResponse(responseCode = "404", description = "Jugador no encontrado")
     @DeleteMapping("/{id}")
-     public ResponseEntity<?> eliminar(@PathVariable Integer id) {
-        // Tu código de eliminar queda igualito...
-        jugadorService.eliminar(id);
-        return ResponseEntity.ok("El jugador con ID " + id + " ha sido eliminado correctamente.");
+    public ResponseEntity<String> eliminarJugador(@PathVariable Integer id) {
+        jugadorService.eliminarJugador(id);
+        return new ResponseEntity<>("Jugador eliminado correctamente.", HttpStatus.OK);
     }
 }

@@ -1,34 +1,35 @@
 package edu.itm.FairPlay.models;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.persistence.*; // <--- Importamos el "Gerente Mágico" de JPA
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import java.sql.Date;
+import java.time.LocalDate;
 
 @Entity
-@Table(name = "Jugador") // El nombre exacto de la tabla en tu base de datos
+@Table(name = "Jugador")
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 public class Jugador {
 
-    @Id // indicamos que esta es la Llave Primaria (Primary Key)
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // aca le dejamos saber que es autoincremento
-    @Column(name = "idJugador") // Conecta la variable con la columna exacta
-    private Integer idJugador;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "idjugador")
+    private Integer idjugador;
 
+    @NotBlank(message = "El nombre es obligatorio")
     @Column(name = "nombre")
     private String nombre;
 
+    @NotBlank(message = "El apellido es obligatorio")
     @Column(name = "apellido")
     private String apellido;
 
+    @Column(name = "fechaRegistro")
+    private LocalDate fechaRegistro;
+
     @Column(name = "idPosicion")
     private Integer idPosicion;
-
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Column(name = "fechaRegistro")
-    private Date fechaRegistro;
 }

@@ -6,4 +6,4 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface JugadorJpaRepository extends JpaRepository<Jugador, Integer> {
- }
+}

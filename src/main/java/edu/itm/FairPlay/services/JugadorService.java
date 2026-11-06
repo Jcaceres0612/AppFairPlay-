@@ -35,7 +35,7 @@ public class JugadorService {
 
         jugadorExistente.setNombre(jugadorActualizado.getNombre());
         jugadorExistente.setApellido(jugadorActualizado.getApellido());
-        jugadorExistente.setIdPosicion(jugadorActualizado.getIdPosicion());
+        jugadorExistente.setPosicion(jugadorActualizado.getPosicion()); // <-- Corregido aquí
         jugadorExistente.setFechaRegistro(jugadorActualizado.getFechaRegistro());
 
         return jugadorRepository.save(jugadorExistente);

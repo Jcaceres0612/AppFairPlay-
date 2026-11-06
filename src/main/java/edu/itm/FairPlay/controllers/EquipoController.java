@@ -1,9 +1,7 @@
 package edu.itm.FairPlay.controllers;
 
-import edu.itm.FairPlay.models.Equipo;
-import edu.itm.FairPlay.services.EquipoService; // Cambiado para usar tu clase exacta
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
+import edu.itm.FairPlay.models.Equipo; //
+import edu.itm.FairPlay.services.EquipoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,11 +10,12 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/equipos")
 public class EquipoController implements IEquipoController {
+
     @Autowired
-    private EquipoService equipoService; // Cambiado aquí también
+    private EquipoService equipoService;
 
     @GetMapping
-     public ResponseEntity<?> listarEquipos() {
+    public ResponseEntity<?> listarEquipos() {
         try {
             return ResponseEntity.ok(equipoService.listarEquipos());
         } catch (Exception e) {
@@ -25,7 +24,7 @@ public class EquipoController implements IEquipoController {
     }
 
     @PostMapping
-     public ResponseEntity<?> registrarEquipo(@RequestBody Equipo equipo) {
+    public ResponseEntity<?> registrarEquipo(@RequestBody Equipo equipo) {
         try {
             equipoService.registrarEquipo(equipo);
         } catch (Exception e) {
@@ -36,7 +35,7 @@ public class EquipoController implements IEquipoController {
     }
 
     @PutMapping("/{id}")
-     public ResponseEntity<?> actualizarEquipo(@PathVariable Integer id, @RequestBody Equipo equipo) {
+    public ResponseEntity<?> actualizarEquipo(@PathVariable Integer id, @RequestBody Equipo equipo) {
         equipo.setIdEquipo(id);
         try {
             equipoService.actualizarEquipo(equipo);
@@ -47,7 +46,7 @@ public class EquipoController implements IEquipoController {
     }
 
     @DeleteMapping("/{id}")
-     public ResponseEntity<?> eliminarEquipo(@PathVariable Integer id) {
+    public ResponseEntity<?> eliminarEquipo(@PathVariable Integer id) {
         try {
             equipoService.eliminarEquipo(id);
         } catch (Exception e) {

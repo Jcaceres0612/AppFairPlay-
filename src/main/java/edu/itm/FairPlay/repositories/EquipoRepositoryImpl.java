@@ -1,6 +1,7 @@
 package edu.itm.FairPlay.repositories;
 
 import edu.itm.FairPlay.models.Equipo;
+import edu.itm.FairPlay.models.Partido;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -21,12 +22,14 @@ public class EquipoRepositoryImpl implements EquipoRepository {
     @Override
     public void registrarEquipo(Equipo equipo) throws Exception {
         String sql = "INSERT INTO Equipo (nombreEquipo, idPartido) VALUES (?, ?)";
-        jdbcTemplate.update(sql, equipo.getNombreEquipo(), equipo.getIdPartido());
+        // Obtenemos el ID desde el objeto Partido asociado
+        jdbcTemplate.update(sql, equipo.getNombreEquipo(), equipo.getPartido().getIdPartido());
     }
 
     @Override
     public List<Equipo> listarEquipos() throws Exception {
-        String sql = "SELECT * FROM Equipo";
+        // Consulta explícita sin asteriscos (*) cumpliendo los requisitos
+        String sql = "SELECT idEquipo, nombreEquipo, idPartido FROM Equipo";
 
         return jdbcTemplate.query(sql, new RowMapper<Equipo>() {
             @Override
@@ -34,7 +37,12 @@ public class EquipoRepositoryImpl implements EquipoRepository {
                 Equipo e = new Equipo();
                 e.setIdEquipo(rs.getInt("idEquipo"));
                 e.setNombreEquipo(rs.getString("nombreEquipo"));
-                e.setIdPartido(rs.getInt("idPartido"));
+
+                // Mapeo correcto del objeto Partido relacionado
+                Partido p = new Partido();
+                p.setIdPartido(rs.getInt("idPartido"));
+                e.setPartido(p);
+
                 return e;
             }
         });
@@ -43,7 +51,11 @@ public class EquipoRepositoryImpl implements EquipoRepository {
     @Override
     public void actualizarEquipo(Equipo equipo) throws Exception {
         String sql = "UPDATE Equipo SET nombreEquipo = ?, idPartido = ? WHERE idEquipo = ?";
-        jdbcTemplate.update(sql, equipo.getNombreEquipo(), equipo.getIdPartido(), equipo.getIdEquipo());
+        jdbcTemplate.update(sql,
+                equipo.getNombreEquipo(),
+                equipo.getPartido().getIdPartido(),
+                equipo.getIdEquipo()
+        );
     }
 
     @Override
@@ -54,22 +66,24 @@ public class EquipoRepositoryImpl implements EquipoRepository {
 
     @Override
     public Equipo buscarPorId(Integer id) throws Exception {
-        // 1. Preparamos el Read (CRUD) buscando al equipo por su ID
-        String sql = "SELECT * FROM Equipo WHERE idEquipo = ?";
+        // Consulta explícita sin asteriscos (*)
+        String sql = "SELECT idEquipo, nombreEquipo, idPartido FROM Equipo WHERE idEquipo = ?";
 
-        // 2. Ejecutamos la consulta
         List<Equipo> resultados = jdbcTemplate.query(sql, new RowMapper<Equipo>() {
             @Override
             public Equipo mapRow(ResultSet rs, int rowNum) throws SQLException {
                 Equipo e = new Equipo();
                 e.setIdEquipo(rs.getInt("idEquipo"));
                 e.setNombreEquipo(rs.getString("nombreEquipo"));
-                e.setIdPartido(rs.getInt("idPartido"));
+
+                Partido p = new Partido();
+                p.setIdPartido(rs.getInt("idPartido"));
+                e.setPartido(p);
+
                 return e;
             }
         }, id);
 
-        // 3. Verificamos si SQL Server encontró algo
         if (resultados.isEmpty()) {
             return null; // El equipo no existe
         } else {

@@ -1,7 +1,7 @@
 package edu.itm.FairPlay.controllers;
 
-import edu.itm.FairPlay.models.Equipo;
 import io.swagger.v3.oas.annotations.Operation;
+import edu.itm.FairPlay.models.Equipo;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;

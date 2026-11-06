@@ -1,8 +1,7 @@
 package edu.itm.FairPlay.services;
 
-import edu.itm.FairPlay.models.Equipo;
 import java.util.List;
-
+import edu.itm.FairPlay.models.Equipo;
 
 
 

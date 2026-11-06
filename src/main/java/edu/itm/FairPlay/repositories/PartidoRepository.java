@@ -8,4 +8,5 @@ public interface PartidoRepository {
     List<Partido> listarPartidos() throws Exception;
     void actualizarPartido(Partido partido) throws Exception;
     void eliminarPartido(Integer id) throws Exception;
+    Partido buscarPorId(Integer id) throws Exception; // <-- Agregado aquí
 }

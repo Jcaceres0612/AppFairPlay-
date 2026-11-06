@@ -6,7 +6,7 @@ import edu.itm.FairPlay.models.Partido;
 import edu.itm.FairPlay.services.PartidoService;
 import java.util.List;
 
-//@RestController
+@RestController // <-- ¡Descomentado para que Spring Boot reconozca el controlador!
 @RequestMapping("/api/partidos")
 public class PartidoController {
 

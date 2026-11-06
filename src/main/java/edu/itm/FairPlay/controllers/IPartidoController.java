@@ -7,18 +7,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
-@Tag(name = "Partidos", description = "Manejo de los partidos del torneo")
+@Tag(name = "Partidos", description = "Gestión de encuentros y partidos del torneo")
 public interface IPartidoController {
 
-    @Operation(summary = "Ver todos", description = "Trae la lista de partidos programados o jugados")
+    @Operation(summary = "Ver partidos", description = "Lista todos los partidos programados")
     ResponseEntity<?> listarPartidos();
 
-    @Operation(summary = "Registrar partido", description = "Guarda un partido nuevo")
+    @Operation(summary = "Registrar partido", description = "Crea un nuevo partido en el sistema")
     ResponseEntity<?> registrarPartido(@RequestBody Partido partido);
 
-    @Operation(summary = "Actualizar partido", description = "Modifica la información o resultado de un partido")
+    @Operation(summary = "Actualizar partido", description = "Modifica los datos de un partido existente")
     ResponseEntity<?> actualizarPartido(@PathVariable Integer id, @RequestBody Partido partido);
 
-    @Operation(summary = "Borrar partido", description = "Elimina un partido")
+    @Operation(summary = "Eliminar partido", description = "Borra un partido por su ID")
     ResponseEntity<?> eliminarPartido(@PathVariable Integer id);
 }

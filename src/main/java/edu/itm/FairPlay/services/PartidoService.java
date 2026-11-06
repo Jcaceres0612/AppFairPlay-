@@ -26,7 +26,7 @@ public class PartidoService {
     public Partido buscarPorId(Integer id) throws Exception {
         Partido partido = repositorio.buscarPorId(id);
         if (partido == null) {
-            throw new RecursoNoEncontradoException("Partido con ID " + id + " no encontrado.");
+            throw new RecursoNoEncontradoException("El partido con ID " + id + " no fue encontrado en FairPlay.");
         }
         return partido;
     }

@@ -51,4 +51,29 @@ public class EquipoRepositoryImpl implements EquipoRepository {
         String sql = "DELETE FROM Equipo WHERE idEquipo = ?";
         jdbcTemplate.update(sql, id);
     }
+
+    @Override
+    public Equipo buscarPorId(Integer id) throws Exception {
+        // 1. Preparamos el Read (CRUD) buscando al equipo por su ID
+        String sql = "SELECT * FROM Equipo WHERE idEquipo = ?";
+
+        // 2. Ejecutamos la consulta
+        List<Equipo> resultados = jdbcTemplate.query(sql, new RowMapper<Equipo>() {
+            @Override
+            public Equipo mapRow(ResultSet rs, int rowNum) throws SQLException {
+                Equipo e = new Equipo();
+                e.setIdEquipo(rs.getInt("idEquipo"));
+                e.setNombreEquipo(rs.getString("nombreEquipo"));
+                e.setIdPartido(rs.getInt("idPartido"));
+                return e;
+            }
+        }, id);
+
+        // 3. Verificamos si SQL Server encontró algo
+        if (resultados.isEmpty()) {
+            return null; // El equipo no existe
+        } else {
+            return resultados.get(0); // Devolvemos el equipo encontrado
+        }
+    }
 }

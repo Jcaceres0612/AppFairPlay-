@@ -1,20 +1,35 @@
 package edu.itm.FairPlay.models;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import java.sql.Date;
+import java.time.LocalDate;
 
+@Entity
+@Table(name = "Jugador")
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 public class Jugador {
-    private Integer idJugador;
-    private String nombre;
-    private String apellido;
-    private Integer idPosicion;
 
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private Date fechaRegistro;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "idjugador")
+    private Integer idjugador;
+
+    @NotBlank(message = "El nombre es obligatorio")
+    @Column(name = "nombre")
+    private String nombre;
+
+    @NotBlank(message = "El apellido es obligatorio")
+    @Column(name = "apellido")
+    private String apellido;
+
+    @Column(name = "fechaRegistro")
+    private LocalDate fechaRegistro;
+
+    @Column(name = "idPosicion")
+    private Integer idPosicion;
 }

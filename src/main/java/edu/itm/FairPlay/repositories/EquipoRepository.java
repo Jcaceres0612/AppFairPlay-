@@ -8,4 +8,5 @@ public interface EquipoRepository {
     List<Equipo> listarEquipos() throws Exception;
     void actualizarEquipo(Equipo equipo) throws Exception;
     void eliminarEquipo(Integer id) throws Exception;
+    Equipo buscarPorId(Integer id) throws Exception;
 }

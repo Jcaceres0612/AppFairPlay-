@@ -7,4 +7,7 @@ public interface EquipoJugadorRepository {
     void registrarEquipoJugador(EquipoJugador equipoJugador) throws Exception;
     List<EquipoJugador> listarPorEquipo(Integer idEquipo) throws Exception;
     void eliminarEquipoJugador(Integer idEquipo, Integer idJugador) throws Exception;
+
+
+    Integer contarJugadoresPorEquipo(Integer idEquipo) throws Exception;
 }

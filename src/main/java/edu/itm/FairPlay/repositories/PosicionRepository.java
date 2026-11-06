@@ -8,4 +8,5 @@ public interface PosicionRepository {
     List<Posicion> listarPosiciones() throws Exception;
     void actualizarPosicion(Posicion posicion) throws Exception;
     void eliminarPosicion(Integer id) throws Exception;
+    Posicion buscarPorId(Integer id) throws Exception;
 }

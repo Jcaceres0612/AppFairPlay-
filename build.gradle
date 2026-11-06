@@ -1,6 +1,6 @@
 plugins {
 	id 'java'
-	id 'org.springframework.boot' version '3.3.0' // Actualizado a una versión estable compatible de Spring Boot 3
+	id 'org.springframework.boot' version '3.3.0'
 	id 'io.spring.dependency-management' version '1.1.7'
 }
 
@@ -24,8 +24,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 
-	// Documentación Swagger (Se dejó una sola versión limpia)
-	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.4'
+	// Documentación Swagger (Versión 2.5.0 totalmente compatible con Spring Boot 3.3.0)
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
 
 	// Bases de datos
 	runtimeOnly 'com.microsoft.sqlserver:mssql-jdbc'
@@ -40,7 +40,7 @@ dependencies {
 	// Desarrollo y Herramientas
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
-	// PRUEBAS (JUnit 5 y Mockito vienen incluidos aquí por defecto)
+	// PRUEBAS (JUnit 5 y Mockito)
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }

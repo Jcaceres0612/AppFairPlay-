@@ -14,20 +14,20 @@ public class PosicionRepositoryImpl implements PosicionRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
-    // Spring inyecta JdbcTemplate automáticamente para que podamos hacer consultas
     public PosicionRepositoryImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
     public void registrarPosicion(Posicion posicion) throws Exception {
-        String sql = "INSERT INTO Posicion (idPosicion, nombrePosicion, descripcion) VALUES (?, ?, ?)";
-        jdbcTemplate.update(sql, posicion.getIdPosicion(), posicion.getNombrePosicion(), posicion.getDescripcion());
+        String sql = "INSERT INTO Posicion (nombrePosicion, descripcion) VALUES (?, ?)";
+        jdbcTemplate.update(sql, posicion.getNombrePosicion(), posicion.getDescripcion());
     }
 
     @Override
     public List<Posicion> listarPosiciones() throws Exception {
-        String sql = "SELECT * FROM Posicion";
+        // Consulta explícita sin asteriscos (*)
+        String sql = "SELECT idPosicion, nombrePosicion, descripcion FROM Posicion";
 
         return jdbcTemplate.query(sql, new RowMapper<Posicion>() {
             @Override
@@ -51,5 +51,27 @@ public class PosicionRepositoryImpl implements PosicionRepository {
     public void eliminarPosicion(Integer id) throws Exception {
         String sql = "DELETE FROM Posicion WHERE idPosicion = ?";
         jdbcTemplate.update(sql, id);
+    }
+
+    @Override
+    public Posicion buscarPorId(Integer id) throws Exception {
+        String sql = "SELECT idPosicion, nombrePosicion, descripcion FROM Posicion WHERE idPosicion = ?";
+
+        List<Posicion> resultados = jdbcTemplate.query(sql, new RowMapper<Posicion>() {
+            @Override
+            public Posicion mapRow(ResultSet rs, int rowNum) throws SQLException {
+                Posicion p = new Posicion();
+                p.setIdPosicion(rs.getInt("idPosicion"));
+                p.setNombrePosicion(rs.getString("nombrePosicion"));
+                p.setDescripcion(rs.getString("descripcion"));
+                return p;
+            }
+        }, id);
+
+        if (resultados.isEmpty()) {
+            return null;
+        } else {
+            return resultados.get(0);
+        }
     }
 }

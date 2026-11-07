@@ -13,7 +13,7 @@ public interface IJugadorController {
     @Operation(summary = "Ver todos los jugadores", description = "Trae la lista completa de los jugadores registrados en la base de datos.")
     ResponseEntity<?> listarTodos() throws Exception;
 
-    @Operation(summary = "Registrar un jugador nuevo", description = "Ojo: No le mandes el idJugador en el JSON para que SQL Server le asigne el número automáticamente.")
+    @Operation(summary = "Registrar un jugador nuevo", description = "No le mandes el idJugador en el JSON para que SQL Server le asigne el número automáticamente.")
     ResponseEntity<?> guardar(@RequestBody Jugador jugador) throws Exception;
 
     @Operation(summary = "Actualizar datos de un jugador", description = "Actualiza la información de un jugador que ya existe.")

@@ -1,5 +1,6 @@
 package edu.itm.FairPlay.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore; // Importante importar esta anotación
 import jakarta.persistence.*;
 import java.util.List;
 
@@ -17,8 +18,9 @@ public class Posicion {
     @Column(name = "descripcion", length = 255)
     private String descripcion;
 
-    // Relación inversa opcional OneToMany (Un jugador tiene una posición, una posición tiene muchos jugadores)
+    // Relación inversa opcional OneToMany
     @OneToMany(mappedBy = "posicion", cascade = CascadeType.ALL)
+    @JsonIgnore // <-- AGREGAR AQUÍ: Evita que al convertir a JSON entre en bucle infinito
     private List<Jugador> jugadores;
 
     public Posicion() {}

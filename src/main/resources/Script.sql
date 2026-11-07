@@ -23,7 +23,7 @@ CREATE TABLE [dbo].[Posicion] (
 );
 
 CREATE TABLE [dbo].[Jugador] (
-                                 [idjugador] INT IDENTITY(1,1) PRIMARY KEY,
+                                 [idJugador] INT IDENTITY(1,1) PRIMARY KEY, -- 'J' mayúscula para coincidir con Java
                                  [nombre] VARCHAR(100) NOT NULL,
                                  [apellido] VARCHAR(100) NOT NULL,
                                  [fechaRegistro] DATE NULL,

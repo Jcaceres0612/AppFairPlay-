@@ -1,5 +1,6 @@
 package edu.itm.FairPlay.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties; // Importante importar esta anotación
 import jakarta.persistence.*;
 import java.time.LocalDate;
 
@@ -21,21 +22,12 @@ public class Jugador {
     @Column(name = "fechaRegistro")
     private LocalDate fechaRegistro;
 
-    // Relación ManyToOne con Posicion (refleja la llave foránea idPosicion de tu SQL)
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idPosicion", referencedColumnName = "idPosicion")
+    @ManyToOne
+    @JoinColumn(name = "idPosicion")
+    @JsonIgnoreProperties("jugadores") // <-- AGREGAR AQUÍ: Evita que vuelva a traer la lista de jugadores dentro de Posición
     private Posicion posicion;
 
-    // Constructores vacíos y con parámetros
     public Jugador() {}
-
-    public Jugador(Integer idjugador, String nombre, String apellido, LocalDate fechaRegistro, Posicion posicion) {
-        this.idjugador = idjugador;
-        this.nombre = nombre;
-        this.apellido = apellido;
-        this.fechaRegistro = fechaRegistro;
-        this.posicion = posicion;
-    }
 
     // Getters y Setters
     public Integer getIdjugador() {

@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/jugadores")
+@RequestMapping("/api/jugadores")
 @Tag(name = "Jugadores", description = "CRUD de jugadores de FairPlay")
 public class JugadorController {
 

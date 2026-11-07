@@ -1,52 +1,55 @@
 package edu.itm.FairPlay.repositories;
 
 import edu.itm.FairPlay.models.Jugador;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
+import edu.itm.FairPlay.models.Posicion;
 import org.springframework.stereotype.Repository;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class JugadorRepositoryImpl implements JugadorRepository {
+public class JugadorRepositoryImpl {
 
-    private final JdbcTemplate jdbcTemplate;
+    // URL, usuario y contraseña de tu conexión a SQL Server (ajusta si usas variables de entorno o application.properties)
+    private final String url = "jdbc:sqlserver://localhost:1433;databaseName=FairPlay;encrypt=true;trustServerCertificate=true";
+    private final String user = "tu_usuario"; // Cambia por tu usuario de SQL Server
+    private final String password = "tu_password"; // Cambia por tu contraseña de SQL Server
 
-    public JugadorRepositoryImpl(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    // Consulta SQL explícita sin asteriscos (*) cumpliendo con los requisitos
+    public List<Jugador> obtenerTodosSql() {
+        List<Jugador> jugadores = new ArrayList<>();
+        String sql = "SELECT idjugador, nombre, apellido, fechaRegistro, idPosicion FROM Jugador";
+
+        // Uso de try-with-resources para asegurar el cierre automático de conexiones y prevenir fugas
+        try (Connection conn = DriverManager.getConnection(url, user, password);
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                Jugador jugador = new Jugador();
+                jugador.setIdjugador(rs.getInt("idjugador"));
+                jugador.setNombre(rs.getString("nombre"));
+                jugador.setApellido(rs.getString("apellido"));
+
+                Date sqlDate = rs.getDate("fechaRegistro");
+                if (sqlDate != null) {
+                    jugador.setFechaRegistro(sqlDate.toLocalDate());
+                }
+
+                // Mapeo correcto de la posición como objeto para evitar errores
+                Posicion posicion = new Posicion();
+                posicion.setIdPosicion(rs.getInt("idPosicion"));
+                jugador.setPosicion(posicion);
+
+                jugadores.add(jugador);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Error al consultar jugadores vía JDBC SQL", e);
+        }
+
+        return jugadores;
     }
-
-    @Override
-    public void registrarJugador(Jugador jugador) throws Exception {
-        String sql = "INSERT INTO Jugador (nombre, apellido, fechaRegistro, idPosicion) VALUES (?, ?, ?, ?)";
-        jdbcTemplate.update(sql, jugador.getNombre(), jugador.getApellido(), jugador.getFechaRegistro(), jugador.getIdPosicion());
-    }
-    @Override
-    public List<Jugador> listarJugadores() throws Exception {
-        String sql = "SELECT * FROM Jugador";
-
-        return jdbcTemplate.query(sql, (rs, rowNum) -> {
-            Jugador j = new Jugador();
-            j.setIdJugador(rs.getInt("idjugador")); // <--- Con J mayúscula
-            j.setNombre(rs.getString("nombre"));
-            j.setApellido(rs.getString("apellido"));
-            j.setFechaRegistro(rs.getDate("fechaRegistro"));
-            j.setIdPosicion(rs.getInt("idPosicion"));
-            return j;
-        });
-    }
-
-    @Override
-    public void actualizarJugador(Jugador jugador) throws Exception {
-        String sql = "UPDATE Jugador SET nombre = ?, apellido = ?, fechaRegistro = ?, idPosicion = ? WHERE idjugador = ?";
-        jdbcTemplate.update(sql, jugador.getNombre(), jugador.getApellido(), jugador.getFechaRegistro(), jugador.getIdPosicion(), jugador.getIdJugador()); // <--- Con J mayúscula
-    }
-
-    @Override
-    public void eliminarJugador(Integer id) throws Exception {
-        String sql = "DELETE FROM Jugador WHERE idjugador = ?";
-        jdbcTemplate.update(sql, id);
-    }}
-
+}

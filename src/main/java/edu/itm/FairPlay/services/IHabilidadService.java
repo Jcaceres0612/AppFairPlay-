@@ -6,6 +6,7 @@ import java.util.List;
 public interface IHabilidadService {
     void registrarHabilidad(Habilidad habilidad) throws Exception;
     List<Habilidad> listarHabilidades() throws Exception;
+    Habilidad buscarPorId(Integer id) throws Exception;
     void actualizarHabilidad(Habilidad habilidad) throws Exception;
     void eliminarHabilidad(Integer id) throws Exception;
 }

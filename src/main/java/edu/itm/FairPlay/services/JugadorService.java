@@ -1,59 +1,48 @@
 package edu.itm.FairPlay.services;
 
+import edu.itm.FairPlay.exceptions.RecursoNoEncontradoException;
 import edu.itm.FairPlay.models.Jugador;
-import edu.itm.FairPlay.repositories.JugadorRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import edu.itm.FairPlay.repositories.JugadorJpaRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
-public class JugadorService implements IJugadorService {
+public class JugadorService {
 
-    @Autowired
-    private JugadorRepository jugadorRepository;
+    private final JugadorJpaRepository jugadorRepository;
 
-    @Override
-    public Jugador guardar(Jugador jugador) {
-
-        try {
-
-            if (jugador.getIdJugador() != null && jugador.getIdJugador() > 0) {
-                jugadorRepository.actualizarJugador(jugador);
-            } else {
-
-                jugadorRepository.registrarJugador(jugador);
-            }
-            return jugador;
-        } catch (Exception e) {
-            throw new RuntimeException("Error en la base de datos: " + e.getMessage());
-        }
+    public JugadorService(JugadorJpaRepository jugadorRepository) {
+        this.jugadorRepository = jugadorRepository;
     }
 
-    @Override
-    public List<Jugador> listarTodos() {
-        try {
-
-            return jugadorRepository.listarJugadores();
-        } catch (Exception e) {
-            throw new RuntimeException("Error al listar: " + e.getMessage());
-        }
+    public Jugador registrarJugador(Jugador jugador) {
+        return jugadorRepository.save(jugador);
     }
 
-    @Override
-    public Optional<Jugador> buscarPorId(Integer id) {
-
-        return Optional.empty();
+    public List<Jugador> listarJugadores() {
+        return jugadorRepository.findAll();
     }
 
-    @Override
-    public void eliminar(Integer id) {
-        try {
+    public Jugador buscarPorId(Integer id) {
+        return jugadorRepository.findById(id)
+                .orElseThrow(() -> new RecursoNoEncontradoException(
+                        "Jugador con ID " + id + " no encontrado."));
+    }
 
-            jugadorRepository.eliminarJugador(id);
-        } catch (Exception e) {
-            throw new RuntimeException("Error al eliminar: " + e.getMessage());
-        }
+    public Jugador actualizarJugador(Integer id, Jugador jugadorActualizado) {
+        Jugador jugadorExistente = buscarPorId(id);
+
+        jugadorExistente.setNombre(jugadorActualizado.getNombre());
+        jugadorExistente.setApellido(jugadorActualizado.getApellido());
+        jugadorExistente.setPosicion(jugadorActualizado.getPosicion()); // <-- Corregido aquí
+        jugadorExistente.setFechaRegistro(jugadorActualizado.getFechaRegistro());
+
+        return jugadorRepository.save(jugadorExistente);
+    }
+
+    public void eliminarJugador(Integer id) {
+        Jugador jugadorExistente = buscarPorId(id);
+        jugadorRepository.delete(jugadorExistente);
     }
 }

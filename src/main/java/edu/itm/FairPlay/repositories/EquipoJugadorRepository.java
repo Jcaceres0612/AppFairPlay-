@@ -5,6 +5,8 @@ import java.util.List;
 
 public interface EquipoJugadorRepository {
     void registrarEquipoJugador(EquipoJugador equipoJugador) throws Exception;
-    List<EquipoJugador> listarPorEquipo(Integer idEquipo) throws Exception;
-    void eliminarEquipoJugador(Integer idEquipo, Integer idJugador) throws Exception;
+    List<EquipoJugador> listarEquipoJugadores() throws Exception;
+    EquipoJugador buscarPorId(Integer id) throws Exception;
+    void actualizarEquipoJugador(EquipoJugador equipoJugador) throws Exception;
+    void eliminarEquipoJugador(Integer id) throws Exception;
 }

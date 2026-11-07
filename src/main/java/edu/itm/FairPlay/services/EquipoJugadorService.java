@@ -57,7 +57,7 @@ public class EquipoJugadorService implements IEquipoJugadorService {
 
     @Override
     public List<EquipoJugador> listarEquiposJugadores() throws Exception {
-        return equipoJugadorRepo.listarPorEquipo(null);
+        return equipoJugadorRepo.listarEquipoJugadores();
     }
 
     @Override

@@ -1,5 +1,4 @@
-
-        package edu.itm.FairPlay.models;
+package edu.itm.FairPlay.models;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -18,7 +17,10 @@ public class Habilidad {
     @Column(name = "idHabilidad")
     private Integer idHabilidad;
 
-    // Corregido con el nombre exacto que vimos en SQL Server
     @Column(name = "nombreHabilidad")
     private String nombreHabilidad;
+
+    // Agregamos este campo para que coincida con el repositorio y el servicio
+    @Column(name = "descripcion")
+    private String descripcion;
 }

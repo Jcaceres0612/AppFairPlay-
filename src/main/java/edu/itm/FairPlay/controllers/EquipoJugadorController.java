@@ -1,47 +1,50 @@
 package edu.itm.FairPlay.controllers;
 
+import edu.itm.FairPlay.models.EquipoJugador;
+import edu.itm.FairPlay.services.IEquipoJugadorService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import edu.itm.FairPlay.models.EquipoJugador;
-import edu.itm.FairPlay.services.EquipoJugadorService;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/equipo-jugadores")
-public class EquipoJugadorController {
+public class EquipoJugadorController implements IEquipoJugadorController {
 
-    private final EquipoJugadorService servicio;
+    @Autowired
+    private IEquipoJugadorService equipoJugadorService;
 
-    public EquipoJugadorController(EquipoJugadorService servicio) {
-        this.servicio = servicio;
+    @Override
+    @GetMapping
+    public ResponseEntity<?> listarEquiposJugadores() {
+        try {
+            return ResponseEntity.ok(equipoJugadorService.listarEquiposJugadores());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al listar las asociaciones equipo-jugador: " + e.getMessage());
+        }
     }
 
+    @Override
     @PostMapping
-    public ResponseEntity<String> agregarJugadorAEquipo(@RequestBody EquipoJugador equipoJugador) {
+    public ResponseEntity<?> asociarJugadorAEquipo(@RequestBody EquipoJugador equipoJugador) {
         try {
-            servicio.asociarJugadorAEquipo(equipoJugador);
-            return ResponseEntity.ok("¡Listo! El jugador fue añadido al equipo correctamente.");
+            equipoJugadorService.asociarJugadorAEquipo(equipoJugador);
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body("¡Jugador asociado exitosamente al equipo en FairPlay!");
         } catch (Exception e) {
-            return ResponseEntity.status(500).body("Rayos, hubo un error al agregar el jugador al equipo: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 
-    @GetMapping("/equipo/{idEquipo}")
-    public List<EquipoJugador> obtenerJugadoresPorEquipo(@PathVariable Integer idEquipo) {
+    @Override
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> desasociarJugadorDeEquipo(@PathVariable Integer id) {
         try {
-            return servicio.listarEquiposJugadores(); // (Asegúrate de quitar el idEquipo de los paréntesis si el método GET general no lo necesita)
+            equipoJugadorService.desasociarJugadorDeEquipo(id);
+            return ResponseEntity.ok("Relación Equipo-Jugador eliminada correctamente.");
         } catch (Exception e) {
-            return null;
-        }
-    }
-
-    @DeleteMapping("/equipo/{idEquipo}/jugador/{idJugador}")
-    public ResponseEntity<String> eliminarJugadorDeEquipo(@PathVariable Integer idEquipo, @PathVariable Integer idJugador) {
-        try {
-            servicio.desasociarJugadorDeEquipo(idEquipo);
-            return ResponseEntity.ok("¡El jugador fue retirado del equipo exitosamente!");
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body("Rayos, hubo un error al eliminar: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error al desasociar: " + e.getMessage());
         }
     }
 }

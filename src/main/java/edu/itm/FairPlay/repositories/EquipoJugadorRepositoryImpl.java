@@ -3,6 +3,7 @@ package edu.itm.FairPlay.repositories;
 import edu.itm.FairPlay.models.EquipoJugador;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+
 import java.util.List;
 
 @Repository
@@ -21,19 +22,41 @@ public class EquipoJugadorRepositoryImpl implements EquipoJugadorRepository {
     }
 
     @Override
-    public List<EquipoJugador> listarPorEquipo(Integer idEquipo) throws Exception {
-        return null; // Lo llenaremos con el RowMapper más adelante
+    public List<EquipoJugador> listarEquipoJugadores() throws Exception {
+        // Consulta explícita sin asteriscos (*)
+        String sql = "SELECT idEquipoJugador, idEquipo, idJugador FROM EquipoJugador";
+        return jdbcTemplate.query(sql, (rs, rowNum) -> {
+            EquipoJugador ej = new EquipoJugador();
+            ej.setIdEquipoJugador(rs.getInt("idEquipoJugador"));
+            ej.setIdEquipo(rs.getInt("idEquipo"));
+            ej.setIdJugador(rs.getInt("idJugador"));
+            return ej;
+        });
     }
 
     @Override
-    public void eliminarEquipoJugador(Integer idEquipo, Integer idJugador) throws Exception {
-        // Lo implementaremos más adelante
+    public EquipoJugador buscarPorId(Integer id) throws Exception {
+        String sql = "SELECT idEquipoJugador, idEquipo, idJugador FROM EquipoJugador WHERE idEquipoJugador = ?";
+        List<EquipoJugador> resultados = jdbcTemplate.query(sql, (rs, rowNum) -> {
+            EquipoJugador ej = new EquipoJugador();
+            ej.setIdEquipoJugador(rs.getInt("idEquipoJugador"));
+            ej.setIdEquipo(rs.getInt("idEquipo"));
+            ej.setIdJugador(rs.getInt("idJugador"));
+            return ej;
+        }, id);
+
+        return resultados.isEmpty() ? null : resultados.get(0);
     }
 
     @Override
-    public Integer contarJugadoresPorEquipo(Integer idEquipo) throws Exception {
-        String sql = "SELECT COUNT(*) FROM EquipoJugador WHERE idEquipo = ?";
-        return jdbcTemplate.queryForObject(sql, Integer.class, idEquipo);
+    public void actualizarEquipoJugador(EquipoJugador equipoJugador) throws Exception {
+        String sql = "UPDATE EquipoJugador SET idEquipo = ?, idJugador = ? WHERE idEquipoJugador = ?";
+        jdbcTemplate.update(sql, equipoJugador.getIdEquipo(), equipoJugador.getIdJugador(), equipoJugador.getIdEquipoJugador());
+    }
+
+    @Override
+    public void eliminarEquipoJugador(Integer id) throws Exception {
+        String sql = "DELETE FROM EquipoJugador WHERE idEquipoJugador = ?";
+        jdbcTemplate.update(sql, id);
     }
 }
-

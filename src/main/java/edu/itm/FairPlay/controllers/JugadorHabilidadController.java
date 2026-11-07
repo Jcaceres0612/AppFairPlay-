@@ -1,47 +1,71 @@
 package edu.itm.FairPlay.controllers;
 
+import edu.itm.FairPlay.models.JugadorHabilidad;
+import edu.itm.FairPlay.services.IJugadorHabilidadService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import edu.itm.FairPlay.models.JugadorHabilidad;
-import edu.itm.FairPlay.services.JugadorHabilidadService;
-import java.util.List;
 
-//@RestController
+@RestController
 @RequestMapping("/api/jugador-habilidades")
-public class JugadorHabilidadController {
+public class JugadorHabilidadController implements IJugadorHabilidadController {
 
-    private final JugadorHabilidadService servicio;
+    @Autowired
+    private IJugadorHabilidadService service;
 
-    public JugadorHabilidadController(JugadorHabilidadService servicio) {
-        this.servicio = servicio;
+    @Override
+    @GetMapping
+    public ResponseEntity<?> listarHabilidadesDeJugadores() {
+        try {
+            return ResponseEntity.ok(service.listarJugadorHabilidades());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al obtener las habilidades de los jugadores: " + e.getMessage());
+        }
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<?> buscarPorId(@PathVariable Integer id) {
+        try {
+            return ResponseEntity.ok(service.buscarPorId(id));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+    @Override
     @PostMapping
-    public ResponseEntity<String> asociarHabilidadAJugador(@RequestBody JugadorHabilidad jugadorHabilidad) {
+    public ResponseEntity<?> asignarHabilidadAJugador(@RequestBody JugadorHabilidad jugadorHabilidad) {
         try {
-            servicio.registrarJugadorHabilidad(jugadorHabilidad);
-            return ResponseEntity.ok("¡Listo! La valoración de la habilidad fue asignada al jugador.");
+            service.registrarJugadorHabilidad(jugadorHabilidad);
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body("¡Habilidad asignada exitosamente al jugador!");
         } catch (Exception e) {
-            return ResponseEntity.status(500).body("Rayos, hubo un error al asociar: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 
-    @GetMapping("/jugador/{idJugador}")
-    public List<JugadorHabilidad> obtenerHabilidadesPorJugador(@PathVariable Integer idJugador) {
+    @PutMapping("/{id}")
+    public ResponseEntity<?> actualizar(@PathVariable Integer id, @RequestBody JugadorHabilidad jugadorHabilidad) {
         try {
-            return servicio.listarPorJugador(idJugador);
+            jugadorHabilidad.setIdJugadorHabilidad(id);
+            service.actualizarJugadorHabilidad(jugadorHabilidad);
+            return ResponseEntity.ok("¡Asignación de habilidad actualizada exitosamente!");
         } catch (Exception e) {
-            return null;
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 
-    @DeleteMapping("/jugador/{idJugador}/habilidad/{idHabilidad}")
-    public ResponseEntity<String> eliminarHabilidadDeJugador(@PathVariable Integer idJugador, @PathVariable Integer idHabilidad) {
+    @Override
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> eliminarHabilidadDeJugador(@PathVariable Integer id) {
         try {
-            servicio.eliminarJugadorHabilidad(idJugador, idHabilidad);
-            return ResponseEntity.ok("¡La habilidad del jugador fue removida con éxito!");
+            service.eliminarJugadorHabilidad(id);
+            return ResponseEntity.ok("Habilidad del jugador eliminada correctamente.");
         } catch (Exception e) {
-            return ResponseEntity.status(500).body("Rayos, hubo un error al eliminar: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Error al eliminar la habilidad: " + e.getMessage());
         }
     }
 }
